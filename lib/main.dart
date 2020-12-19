@@ -7,7 +7,9 @@ import 'package:loja_virtual/shared/managers/user_manager.dart';
 import 'package:loja_virtual/shared/models/product.dart';
 import 'package:provider/provider.dart';
 
+import 'pages/cart/cart_page.dart';
 import 'pages/signup/signup_page.dart';
+import 'shared/managers/cart_manager.dart';
 import 'shared/managers/product_manager.dart';
 
 Future<void> main() async {
@@ -30,6 +32,11 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ProductManager(),
+          lazy: false,
+        ),
+        ChangeNotifierProxyProvider<UserManager, CartManager>(
+          update: (context, value, previous) => previous..updateUser(value),
+          create: (_) => CartManager(),
           lazy: false,
         ),
       ],
@@ -56,6 +63,8 @@ class MyApp extends StatelessWidget {
                   product: settings.arguments as Product,
                 ),
               );
+            case '/cart':
+              return MaterialPageRoute(builder: (_) => CartPage());
             case '/base':
             default:
               return MaterialPageRoute(builder: (_) => BasePage());

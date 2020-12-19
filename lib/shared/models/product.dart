@@ -3,6 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/shared/models/item_size.dart';
 
 class Product extends ChangeNotifier {
+  Product.fromDocument(DocumentSnapshot document) {
+    final data = document.data();
+    id = document.id;
+    name = document['name'] as String;
+    description = document['description'] as String;
+    images = List<String>.from(data['images'] as List<dynamic>);
+    sizes = (data['sizes'] as List<dynamic> ?? [])
+        .map((s) => ItemSize.fromMap(s as Map<String, dynamic>))
+        .toList();
+  }
+
   String id;
   String name;
   String description;
@@ -25,18 +36,8 @@ class Product extends ChangeNotifier {
     return stock;
   }
 
-  bool get hasStock {
-    return totalStock > 0;
-  }
+  bool get hasStock => totalStock > 0;
 
-  Product.fromDocument(DocumentSnapshot document) {
-    final data = document.data();
-    id = document.id;
-    name = document['name'] as String;
-    description = document['description'] as String;
-    images = List<String>.from(data['images'] as List<dynamic>);
-    sizes = (data['sizes'] as List<dynamic> ?? [])
-        .map((s) => ItemSize.fromMap(s as Map<String, dynamic>))
-        .toList();
-  }
+  ItemSize findSize(String size) =>
+      sizes.firstWhere((s) => s.name == size, orElse: () => null);
 }

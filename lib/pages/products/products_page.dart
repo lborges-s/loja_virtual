@@ -10,6 +10,12 @@ class ProductsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        foregroundColor: Theme.of(context).primaryColor,
+        onPressed: () => Navigator.of(context).pushNamed('/cart'),
+        child: const Icon(Icons.shopping_cart),
+      ),
       appBar: AppBar(
         title: LayoutBuilder(builder: (_, constraints) {
           return Consumer<ProductManager>(
@@ -19,7 +25,7 @@ class ProductsPage extends StatelessWidget {
               } else {
                 return GestureDetector(
                   onTap: () => _onSearch(context, productManager),
-                  child: Container(
+                  child: SizedBox(
                     width: constraints.biggest.width,
                     child: Text(
                       productManager.search,
