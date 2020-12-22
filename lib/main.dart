@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'pages/cart/cart_page.dart';
 import 'pages/signup/signup_page.dart';
 import 'shared/managers/cart_manager.dart';
+import 'shared/managers/home_manager.dart';
 import 'shared/managers/product_manager.dart';
 
 Future<void> main() async {
@@ -32,6 +33,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ProductManager(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => HomeManager(),
           lazy: false,
         ),
         ChangeNotifierProxyProvider<UserManager, CartManager>(
