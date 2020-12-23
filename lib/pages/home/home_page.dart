@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/shared/managers/home_manager.dart';
+import 'package:loja_virtual/shared/managers/user_manager.dart';
 import 'package:loja_virtual/shared/widgets/custom_drawer/custom_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -27,26 +28,29 @@ class HomePage extends StatelessWidget {
           ),
           CustomScrollView(
             slivers: <Widget>[
-              SliverAppBar(
-                backgroundColor: Colors.transparent,
-                snap: true,
-                floating: true,
-                elevation: 0,
-                flexibleSpace: const FlexibleSpaceBar(
-                  title: Text('Loja do Lucas'),
-                  centerTitle: true,
-                ),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.shopping_cart),
-                    onPressed: () => Navigator.of(context).pushNamed('/cart'),
+              Consumer<UserManager>(builder: (_, userManager, __) {
+                return SliverAppBar(
+                  backgroundColor: Colors.transparent,
+                  snap: true,
+                  floating: true,
+                  elevation: 0,
+                  flexibleSpace: const FlexibleSpaceBar(
+                    title: Text('Loja do Lucas'),
+                    centerTitle: true,
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.shopping_cart),
+                      onPressed: () => Navigator.of(context).pushNamed('/cart'),
+                    ),
+                    if (userManager.adminEnabled)
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () {},
+                      ),
+                  ],
+                );
+              }),
               Consumer<HomeManager>(
                 builder: (_, homeManager, __) {
                   final children = homeManager.sections.map<Widget>(

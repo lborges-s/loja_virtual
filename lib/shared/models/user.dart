@@ -6,6 +6,7 @@ class UserModel {
   String password;
   String name;
 
+  bool isAdmin = false;
   String confirmPassword;
 
   UserModel({this.email, this.password, this.name, this.id});

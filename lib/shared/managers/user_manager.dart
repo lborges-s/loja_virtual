@@ -20,6 +20,8 @@ class UserManager extends ChangeNotifier {
 
   bool get isLoggedIn => user != null;
 
+  bool get adminEnabled => user != null && user.isAdmin;
+
   Future<void> signIn(
       {UserModel user, Function(String) onFail, Function onSuccess}) async {
     isLoading = true;
@@ -76,6 +78,10 @@ class UserManager extends ChangeNotifier {
       final docUser =
           await firestore.collection('users').doc(currentUser.uid).get();
       user = UserModel.fromDocument(docUser);
+      final docAdmin = await firestore.collection('admins').doc(user.id).get();
+      if (docAdmin.exists) {
+        user.isAdmin = true;
+      }
       notifyListeners();
     }
   }
