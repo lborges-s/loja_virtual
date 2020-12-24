@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/pages/admin_users/admin_users_page.dart';
 import 'package:loja_virtual/pages/home/home_page.dart';
 import 'package:loja_virtual/pages/products/products_page.dart';
 import 'package:loja_virtual/shared/managers/page_manager.dart';
@@ -29,10 +30,7 @@ class BasePage extends StatelessWidget {
                 drawer: CustomDrawer(),
               ),
               if (userManager.adminEnabled) ...[
-                Scaffold(
-                  appBar: AppBar(title: const Text('Usuários')),
-                  drawer: CustomDrawer(),
-                ),
+                AdminUsersPage(),
                 Scaffold(
                   appBar: AppBar(title: const Text('Pedidos')),
                   drawer: CustomDrawer(),

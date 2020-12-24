@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import 'pages/cart/cart_page.dart';
 import 'pages/signup/signup_page.dart';
+import 'shared/managers/admin_users_manager.dart';
 import 'shared/managers/cart_manager.dart';
 import 'shared/managers/home_manager.dart';
 import 'shared/managers/product_manager.dart';
@@ -44,6 +45,12 @@ class MyApp extends StatelessWidget {
           create: (_) => CartManager(),
           lazy: false,
         ),
+        ChangeNotifierProxyProvider<UserManager, AdminUsersManager>(
+          create: (_) => AdminUsersManager(),
+          lazy: false,
+          update: (_, userManager, adminUsersManager) =>
+              adminUsersManager..updateUser(userManager),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
