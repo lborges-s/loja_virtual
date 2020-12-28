@@ -52,13 +52,13 @@ class CustomDrawer extends StatelessWidget {
                 builder: (_, userManager, __) {
                   if (userManager.adminEnabled) {
                     return Column(
-                      children: [
-                        const DrawerTile(
+                      children: const [
+                        DrawerTile(
                           iconData: Icons.settings,
                           title: 'Usuários',
                           page: 4,
                         ),
-                        const DrawerTile(
+                        DrawerTile(
                           iconData: Icons.settings,
                           title: 'Pedidos',
                           page: 5,

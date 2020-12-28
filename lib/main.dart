@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/pages/base/base_page.dart';
 import 'package:loja_virtual/pages/login/login_page.dart';
+import 'package:loja_virtual/pages/products/pages/edit_product/edit_product_page.dart';
 import 'package:loja_virtual/pages/products/pages/product_detail/product_detail_page.dart';
 import 'package:loja_virtual/shared/managers/user_manager.dart';
 import 'package:loja_virtual/shared/models/product.dart';
@@ -77,6 +78,11 @@ class MyApp extends StatelessWidget {
               );
             case '/cart':
               return MaterialPageRoute(builder: (_) => CartPage());
+            case '/edit_product':
+              return MaterialPageRoute(
+                builder: (_) =>
+                    EditProductPage(product: settings.arguments as Product),
+              );
             case '/base':
             default:
               return MaterialPageRoute(builder: (_) => BasePage());

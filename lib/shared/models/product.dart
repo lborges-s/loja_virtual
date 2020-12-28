@@ -38,6 +38,15 @@ class Product extends ChangeNotifier {
 
   bool get hasStock => totalStock > 0;
 
+  num get basePrize {
+    num lowest = double.infinity;
+
+    for (final size in sizes) {
+      if (size.price < lowest && size.hasStock) lowest = size.price;
+    }
+    return lowest;
+  }
+
   ItemSize findSize(String size) =>
       sizes.firstWhere((s) => s.name == size, orElse: () => null);
 }
