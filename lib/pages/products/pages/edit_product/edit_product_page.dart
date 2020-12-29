@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/shared/models/product.dart';
 
 import 'components/images_form.dart';
+import 'components/sizes_form.dart';
 
 class EditProductPage extends StatelessWidget {
   final Product product;
@@ -53,8 +54,10 @@ class EditProductPage extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       'A partir de',
-                      style:
-                          TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey.shade600,
+                      ),
                     ),
                   ),
                   Text(
@@ -93,6 +96,7 @@ class EditProductPage extends StatelessWidget {
                       return null;
                     },
                   ),
+                  SizesForm(product),
                   RaisedButton(
                     color: primaryColor,
                     textColor: Colors.white,
