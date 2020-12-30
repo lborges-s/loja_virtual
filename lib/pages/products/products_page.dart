@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/shared/managers/product_manager.dart';
+import 'package:loja_virtual/shared/managers/user_manager.dart';
 import 'package:loja_virtual/shared/widgets/custom_drawer/custom_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -56,9 +57,18 @@ class ProductsPage extends StatelessWidget {
               }
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {},
+          Consumer<UserManager>(
+            builder: (_, userManager, __) {
+              if (userManager.adminEnabled) {
+                return IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed('/edit_product'),
+                );
+              } else {
+                return Container();
+              }
+            },
           ),
         ],
       ),
