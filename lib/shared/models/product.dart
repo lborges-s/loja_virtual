@@ -62,7 +62,7 @@ class Product extends ChangeNotifier {
 
   bool get hasStock => totalStock > 0;
 
-  num get basePrize {
+  num get basePrice {
     num lowest = double.infinity;
 
     for (final size in sizes) {

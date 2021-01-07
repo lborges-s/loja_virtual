@@ -9,6 +9,7 @@ import 'package:loja_virtual/shared/models/product.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/cart/cart_page.dart';
+import 'pages/select_product/select_product_page.dart';
 import 'pages/signup/signup_page.dart';
 import 'shared/managers/admin_users_manager.dart';
 import 'shared/managers/cart_manager.dart';
@@ -83,6 +84,8 @@ class MyApp extends StatelessWidget {
                 builder: (_) =>
                     EditProductPage(p: settings.arguments as Product),
               );
+            case '/select_product':
+              return MaterialPageRoute(builder: (_) => SelectProductPage());
             case '/base':
             default:
               return MaterialPageRoute(builder: (_) => BasePage());
