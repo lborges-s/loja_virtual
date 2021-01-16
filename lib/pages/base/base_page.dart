@@ -7,10 +7,15 @@ import 'package:loja_virtual/shared/managers/user_manager.dart';
 import 'package:loja_virtual/shared/widgets/custom_drawer/custom_drawer.dart';
 import 'package:provider/provider.dart';
 
-class BasePage extends StatelessWidget {
+class BasePage extends StatefulWidget {
+  @override
+  _BasePageState createState() => _BasePageState();
+}
+
+class _BasePageState extends State<BasePage> {
+  final pageController = PageController();
   @override
   Widget build(BuildContext context) {
-    final pageController = PageController();
     return Provider<PageManager>(
       create: (_) => PageManager(pageController),
       child: Consumer<UserManager>(
