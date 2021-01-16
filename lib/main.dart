@@ -8,6 +8,7 @@ import 'package:loja_virtual/shared/managers/user_manager.dart';
 import 'package:loja_virtual/shared/models/product.dart';
 import 'package:provider/provider.dart';
 
+import 'pages/address/address_page.dart';
 import 'pages/cart/cart_page.dart';
 import 'pages/select_product/select_product_page.dart';
 import 'pages/signup/signup_page.dart';
@@ -19,10 +20,7 @@ import 'shared/managers/product_manager.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   runApp(MyApp());
-
-  // FirebaseFirestore.instance.collection('teste').add({'teste': 'teste'});
 }
 
 class MyApp extends StatelessWidget {
@@ -79,6 +77,8 @@ class MyApp extends StatelessWidget {
               );
             case '/cart':
               return MaterialPageRoute(builder: (_) => CartPage());
+            case '/address':
+              return MaterialPageRoute(builder: (_) => AddressPage());
             case '/edit_product':
               return MaterialPageRoute(
                 builder: (_) =>

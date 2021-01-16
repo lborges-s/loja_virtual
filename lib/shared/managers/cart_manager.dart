@@ -1,22 +1,53 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:loja_virtual/shared/managers/user_manager.dart';
+import 'package:loja_virtual/shared/models/address.dart';
 import 'package:loja_virtual/shared/models/cart_product.dart';
 import 'package:loja_virtual/shared/models/product.dart';
 import 'package:loja_virtual/shared/models/user.dart';
+import 'package:loja_virtual/shared/services/cep_aberto_service.dart';
 
 class CartManager extends ChangeNotifier {
   List<CartProduct> items = [];
 
   UserModel user;
+  Address address;
 
-  num productsPrice = 0;
+  num productsPrice = 0.0;
+  num deliveryPrice;
+
+  num get totalPrice => productsPrice + (deliveryPrice ?? 0);
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  set isLoading(bool loading) {
+    _isLoading = loading;
+    notifyListeners();
+  }
+
+  bool get isCartValid {
+    if (items.isEmpty) return false;
+    for (final cartProduct in items) {
+      if (!cartProduct.hasStock) return false;
+    }
+
+    return true;
+  }
+
+  bool get isAddressValid => address != null && deliveryPrice != null;
+
+  final firestore = FirebaseFirestore.instance;
 
   void updateUser(UserManager value) {
     user = value.user;
+    productsPrice = 0.0;
     items.clear();
+    removeAddress();
 
     if (user != null) {
       _loadCartItems();
+      _loadUserAddress();
     }
   }
 
@@ -28,6 +59,14 @@ class CartManager extends ChangeNotifier {
           (d) => CartProduct.fromDocument(d)..addListener(_onItemUpdated),
         )
         .toList();
+  }
+
+  Future<void> _loadUserAddress() async {
+    if (user.address != null &&
+        await calculateDelivery(user.address.lat, user.address.long)) {
+      address = user.address;
+      notifyListeners();
+    }
   }
 
   void addToCart(Product product) {
@@ -78,12 +117,70 @@ class CartManager extends ChangeNotifier {
     }
   }
 
-  bool get isCartValid {
-    //!items.any((cartProduct) => !(cartProduct.hasStock));
-    if (items.isEmpty) return false;
-    for (final cartProduct in items) {
-      if (!cartProduct.hasStock) return false;
+  Future<void> getAddress(String cep) async {
+    isLoading = true;
+    final cepAbertoService = CepAbertoService();
+
+    try {
+      final cepAbertoAddress = await cepAbertoService.getAddressFromCep(cep);
+
+      if (cepAbertoAddress != null) {
+        address = Address(
+            street: cepAbertoAddress.logradouro,
+            district: cepAbertoAddress.bairro,
+            zipCode: cepAbertoAddress.cep,
+            city: cepAbertoAddress.cidade.nome,
+            state: cepAbertoAddress.estado.sigla,
+            lat: cepAbertoAddress.latitude,
+            long: cepAbertoAddress.longitude);
+      }
+      isLoading = false;
+    } catch (e) {
+      isLoading = false;
+      return Future.error('CEP Inválido');
     }
+  }
+
+  Future<void> setAddress(Address address) async {
+    isLoading = true;
+    this.address = address;
+
+    if (await calculateDelivery(address.lat, address.long)) {
+      user.setAddress(address);
+      isLoading = false;
+    } else {
+      isLoading = false;
+      return Future.error('Endereço fora do raio de entrega :(');
+    }
+  }
+
+  void removeAddress() {
+    address = null;
+    deliveryPrice = null;
+    notifyListeners();
+  }
+
+  Future<bool> calculateDelivery(double lat, double long) async {
+    final doc = await firestore.doc('aux/delivery').get();
+
+    final data = doc.data();
+
+    final latStore = data['lat'] as double;
+    final longStore = data['long'] as double;
+    final basePrice = doc['base'] as num;
+    final km = doc['km'] as num;
+    final maxKm = data['maxkm'] as num;
+
+    double distance =
+        Geolocator.distanceBetween(latStore, longStore, lat, long);
+
+    distance /= 1000.0;
+
+    if (distance > maxKm) {
+      return false;
+    }
+
+    deliveryPrice = basePrice + distance * km;
 
     return true;
   }
