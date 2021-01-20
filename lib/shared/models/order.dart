@@ -12,7 +12,24 @@ class Order {
     address = cartManager.address;
   }
 
+  Order.fromDocument(DocumentSnapshot doc) {
+    orderId = doc.id;
+
+    final data = doc.data();
+
+    items = (data['items'] as List<dynamic>)
+        .map<CartProduct>((e) => CartProduct.fromMap(e as Map<String, dynamic>))
+        .toList();
+
+    price = data['price'] as num;
+    userId = data['user'] as String;
+    address = Address.fromMap(data['address'] as Map<String, dynamic>);
+    date = data['date'] as Timestamp;
+  }
+
   final firestore = FirebaseFirestore.instance;
+
+  String get formattedId => '#${orderId.padLeft(6, '0')}';
 
   String orderId;
 
@@ -32,5 +49,10 @@ class Order {
       'user': userId,
       'address': address.toMap(),
     });
+  }
+
+  @override
+  String toString() {
+    return 'Order{orderId: $orderId, items: $items, price: $price, userId: $userId, address: $address, date: $date}';
   }
 }

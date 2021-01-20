@@ -11,12 +11,15 @@ import 'package:provider/provider.dart';
 import 'pages/address/address_page.dart';
 import 'pages/cart/cart_page.dart';
 import 'pages/checkout/checkout_page.dart';
+import 'pages/confirmation/confirmation_page.dart';
 import 'pages/select_product/select_product_page.dart';
 import 'pages/signup/signup_page.dart';
 import 'shared/managers/admin_users_manager.dart';
 import 'shared/managers/cart_manager.dart';
 import 'shared/managers/home_manager.dart';
+import 'shared/managers/orders_manager.dart';
 import 'shared/managers/product_manager.dart';
+import 'shared/models/order.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +54,13 @@ class MyApp extends StatelessWidget {
           lazy: false,
           update: (_, userManager, adminUsersManager) =>
               adminUsersManager..updateUser(userManager),
-        )
+        ),
+        ChangeNotifierProxyProvider<UserManager, OrdersManager>(
+          create: (_) => OrdersManager(),
+          lazy: false,
+          update: (_, userManager, ordersManager) =>
+              ordersManager..updateUser(userManager.user),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -92,6 +101,10 @@ class MyApp extends StatelessWidget {
               );
             case '/select_product':
               return MaterialPageRoute(builder: (_) => SelectProductPage());
+            case '/confirmation':
+              return MaterialPageRoute(
+                  builder: (_) =>
+                      ConfirmationPage(settings.arguments as Order));
             case '/base':
             default:
               return MaterialPageRoute(

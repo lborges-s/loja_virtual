@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/pages/admin_users/admin_users_page.dart';
 import 'package:loja_virtual/pages/home/home_page.dart';
+import 'package:loja_virtual/pages/orders/orders_page.dart';
 import 'package:loja_virtual/pages/products/products_page.dart';
 import 'package:loja_virtual/shared/managers/page_manager.dart';
 import 'package:loja_virtual/shared/managers/user_manager.dart';
@@ -26,10 +27,7 @@ class _BasePageState extends State<BasePage> {
             children: [
               HomePage(),
               ProductsPage(),
-              Scaffold(
-                appBar: AppBar(title: const Text('Meus Pedidos')),
-                drawer: CustomDrawer(),
-              ),
+              OrdersPage(),
               Scaffold(
                 appBar: AppBar(title: const Text('Lojas')),
                 drawer: CustomDrawer(),

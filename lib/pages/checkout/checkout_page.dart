@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/shared/managers/cart_manager.dart';
 import 'package:loja_virtual/shared/managers/checkout_manager.dart';
+import 'package:loja_virtual/shared/models/order.dart';
 import 'package:loja_virtual/shared/widgets/price_card.dart';
 import 'package:provider/provider.dart';
 
@@ -49,10 +50,14 @@ class CheckoutPage extends StatelessWidget {
                 PriceCard(
                   buttonText: 'Finalizar Pedido',
                   onPressed: () => checkoutManager.checkout(
-                    onStockFail: (String error) => Navigator.of(context)
+                    onStockFail: (error) => Navigator.of(context)
                         .popUntil((route) => route.settings.name == '/cart'),
-                    onSuccess: () => Navigator.of(context)
-                        .popUntil((route) => route.settings.name == '/base'),
+                    onSuccess: (order) {
+                      Navigator.of(context)
+                          .popUntil((route) => route.settings.name == '/base');
+                      Navigator.of(context)
+                          .pushNamed('/confirmation', arguments: order);
+                    },
                   ),
                 )
               ],
