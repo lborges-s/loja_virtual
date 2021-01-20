@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import 'pages/address/address_page.dart';
 import 'pages/cart/cart_page.dart';
+import 'pages/checkout/checkout_page.dart';
 import 'pages/select_product/select_product_page.dart';
 import 'pages/signup/signup_page.dart';
 import 'shared/managers/admin_users_manager.dart';
@@ -76,9 +77,14 @@ class MyApp extends StatelessWidget {
                 ),
               );
             case '/cart':
-              return MaterialPageRoute(builder: (_) => CartPage());
+              return MaterialPageRoute(
+                builder: (_) => CartPage(),
+                settings: settings,
+              );
             case '/address':
               return MaterialPageRoute(builder: (_) => AddressPage());
+            case '/checkout':
+              return MaterialPageRoute(builder: (_) => CheckoutPage());
             case '/edit_product':
               return MaterialPageRoute(
                 builder: (_) =>
@@ -88,7 +94,10 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (_) => SelectProductPage());
             case '/base':
             default:
-              return MaterialPageRoute(builder: (_) => BasePage());
+              return MaterialPageRoute(
+                builder: (_) => BasePage(),
+                settings: settings,
+              );
           }
         },
       ),

@@ -80,7 +80,7 @@ class CartManager extends ChangeNotifier {
       items.add(cartProduct);
 
       user.cartReference
-          .add(cartProduct.toMap())
+          .add(cartProduct.toCartItemMap())
           .then((doc) => cartProduct.id = doc.id);
 
       _onItemUpdated();
@@ -92,6 +92,14 @@ class CartManager extends ChangeNotifier {
     user.cartReference.doc(cartProduct.id).delete();
     cartProduct.removeListener(_onItemUpdated);
 
+    notifyListeners();
+  }
+
+  void clear() {
+    for (final cartProduct in items) {
+      user.cartReference.doc(cartProduct.id).delete();
+    }
+    items.clear();
     notifyListeners();
   }
 
@@ -113,7 +121,9 @@ class CartManager extends ChangeNotifier {
 
   void _updateCartProduct(CartProduct cartProduct) {
     if (cartProduct.id != null) {
-      user.cartReference.doc(cartProduct.id).update(cartProduct.toMap());
+      user.cartReference
+          .doc(cartProduct.id)
+          .update(cartProduct.toCartItemMap());
     }
   }
 
