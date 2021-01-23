@@ -27,6 +27,16 @@ class EditProductPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(editing ? 'Editar Produto' : 'Criar Produto'),
           centerTitle: true,
+          actions: [
+            if (editing)
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  context.read<ProductManager>().delete(product);
+                  Navigator.of(context).pop();
+                },
+              ),
+          ],
         ),
         body: Form(
           key: formKey,
