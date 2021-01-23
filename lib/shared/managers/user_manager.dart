@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/shared/helpers/firebase_errors.dart';
 import 'package:loja_virtual/shared/models/user.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 class UserManager extends ChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -15,8 +16,18 @@ class UserManager extends ChangeNotifier {
   UserModel user;
 
   bool _isLoading = false;
-
   bool get isLoading => _isLoading;
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  bool _loadingFace = false;
+  bool get isLoadingFace => _loadingFace;
+  set isLoadingFace(bool value) {
+    _loadingFace = value;
+    notifyListeners();
+  }
 
   bool get isLoggedIn => user != null;
 
@@ -28,7 +39,9 @@ class UserManager extends ChangeNotifier {
 
     try {
       final UserCredential result = await auth.signInWithEmailAndPassword(
-          email: user.email, password: user.password);
+        email: user.email,
+        password: user.password,
+      );
 
       _loadCurrentUser(firebaseUser: result.user);
 
@@ -37,6 +50,43 @@ class UserManager extends ChangeNotifier {
       onFail(getErrorString(e.code));
     }
     isLoading = false;
+  }
+
+  Future<void> facebookLogin(
+      {Function(String) onFail, Function onSuccess}) async {
+    isLoadingFace = true;
+
+    final result = await FacebookLogin().logIn(['email', 'public_profile']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+        final credential =
+            FacebookAuthProvider.credential(result.accessToken.token);
+
+        final authResult = await auth.signInWithCredential(credential);
+
+        if (authResult.user != null) {
+          final firebaseUser = authResult.user;
+
+          user = UserModel(
+            id: firebaseUser.uid,
+            name: firebaseUser.displayName,
+            email: firebaseUser.email,
+          );
+
+          await user.saveData();
+
+          onSuccess();
+        }
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        break;
+      case FacebookLoginStatus.error:
+        onFail(result.errorMessage);
+        break;
+    }
+
+    isLoadingFace = false;
   }
 
   Future<void> signUp(
@@ -64,11 +114,6 @@ class UserManager extends ChangeNotifier {
   void signOut() {
     auth.signOut();
     user = null;
-    notifyListeners();
-  }
-
-  set isLoading(bool value) {
-    _isLoading = value;
     notifyListeners();
   }
 
