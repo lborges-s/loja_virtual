@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/pages/admin_orders/admin_orders_page.dart';
 import 'package:loja_virtual/pages/admin_users/admin_users_page.dart';
 import 'package:loja_virtual/pages/home/home_page.dart';
 import 'package:loja_virtual/pages/orders/orders_page.dart';
@@ -34,10 +35,7 @@ class _BasePageState extends State<BasePage> {
               ),
               if (userManager.adminEnabled) ...[
                 AdminUsersPage(),
-                Scaffold(
-                  appBar: AppBar(title: const Text('Pedidos')),
-                  drawer: CustomDrawer(),
-                ),
+                AdminOrdersPage(),
               ]
             ],
           );

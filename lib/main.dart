@@ -14,6 +14,7 @@ import 'pages/checkout/checkout_page.dart';
 import 'pages/confirmation/confirmation_page.dart';
 import 'pages/select_product/select_product_page.dart';
 import 'pages/signup/signup_page.dart';
+import 'shared/managers/admin_orders_manager.dart';
 import 'shared/managers/admin_users_manager.dart';
 import 'shared/managers/cart_manager.dart';
 import 'shared/managers/home_manager.dart';
@@ -54,6 +55,12 @@ class MyApp extends StatelessWidget {
           lazy: false,
           update: (_, userManager, adminUsersManager) =>
               adminUsersManager..updateUser(userManager),
+        ),
+        ChangeNotifierProxyProvider<UserManager, AdminOrdersManager>(
+          create: (_) => AdminOrdersManager(),
+          lazy: false,
+          update: (_, userManager, adminOrdersManager) => adminOrdersManager
+            ..updateAdmin(adminEnabled: userManager.adminEnabled),
         ),
         ChangeNotifierProxyProvider<UserManager, OrdersManager>(
           create: (_) => OrdersManager(),

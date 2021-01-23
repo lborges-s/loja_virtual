@@ -5,7 +5,7 @@ import 'package:loja_virtual/shared/widgets/empty_card.dart';
 import 'package:loja_virtual/shared/widgets/login_card.dart';
 import 'package:provider/provider.dart';
 
-import 'components/order_tile.dart';
+import '../../shared/widgets/order/order_tile.dart';
 
 class OrdersPage extends StatelessWidget {
   @override

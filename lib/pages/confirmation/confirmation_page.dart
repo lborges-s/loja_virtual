@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:loja_virtual/pages/orders/components/order_product_tile.dart';
+import 'package:loja_virtual/shared/widgets/order/order_product_tile.dart';
 import 'package:loja_virtual/shared/models/order.dart';
 
 class ConfirmationPage extends StatelessWidget {
