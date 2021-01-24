@@ -20,6 +20,7 @@ import 'shared/managers/cart_manager.dart';
 import 'shared/managers/home_manager.dart';
 import 'shared/managers/orders_manager.dart';
 import 'shared/managers/product_manager.dart';
+import 'shared/managers/stores_manager.dart';
 import 'shared/models/order.dart';
 
 Future<void> main() async {
@@ -44,6 +45,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => HomeManager(),
           lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => StoresManager(),
         ),
         ChangeNotifierProxyProvider<UserManager, CartManager>(
           update: (context, value, previous) => previous..updateUser(value),
